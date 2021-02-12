@@ -56,10 +56,10 @@ static void	init_map(t_cor *vm)
 	int32_t	id;
 
 	pc = 0;
-	id = 1;
-	while (id <= vm->count_players)
+	id = 0;
+	while (id <= vm->count_players - 1)
 	{
-		fill_map(vm, pc, vm->player[INDEX(id)].code_size, id);
+		fill_map(vm, pc, vm->player[id].code_size, vm->player[id].id);
 		pc += MEM_SIZE / vm->count_players;
 		id++;
 	}
@@ -379,7 +379,7 @@ static void		draw_bar(t_cor *vm, size_t len, size_t pos, int index)
 	wattroff(vm->vs->win_info, g_colors_players[index + 1]);
 }
 
-void			draw_lives_bar(t_cor *vm, t_bool current)
+void			draw_lives_bar(t_cor *vm, int current) ////
 {
 	int		i;
 	size_t	sum_lives;
@@ -421,10 +421,10 @@ void		draw_info(t_cor *vm)
 	draw_players(vm);
 	mvwprintw(vm->vs->win_info, vm->vs->cursor_pos += 3,
 			  DEFAULT_INDENT, "Bar of lives for current period :");
-	draw_lives_bar(vm, true);
+	draw_lives_bar(vm, 1);
 	mvwprintw(vm->vs->win_info, vm->vs->cursor_pos += 2,
 			  DEFAULT_INDENT, "Bar of lives for previous period :");
-	draw_lives_bar(vm, false);
+	draw_lives_bar(vm, 0);
 	draw_game_params(vm);
 	if (vm->vs->aff_player)
 		draw_aff(vm);
@@ -513,26 +513,25 @@ void	play_death_sound(t_cor *vm)
 	}
 }
 
+void exec_vs_cycle(t_cor *cor)
+{
+	check_flag(cor);
+	cor->cycle++;
+	game_in_cycle(cor);
+	cor->cycles_after_check++;
+	if (cor->cycles_to_die == cor->cycles_after_check
+	|| cor->cycles_to_die <= 0)
+		make_check(cor);
+}
+
 static void	exec_cycle_vs(t_cor *vm)
 {
-	size_t cursors_num;
-
+	vm->cycles_to_die = CYCLE_TO_DIE;
 	if (vm->count_players)
 	{
-		process_game_logic(vm);
-		if (vm->cycles_to_die == vm->cycles_after_check
-			|| vm->cycles_to_die <= 0)
-		{
-			cursors_num = vm->count_players;
-			make_check(vm);
-			if (cursors_num != vm->count_players && vm->count_cursors)
-				play_death_sound(vm);
-		}
+		exec_vs_cycle(vm);
 		if (!vm->count_cursors)
-		{
-			play_victory_sound(vm);
 			vm->vs->is_running = false;
-		}
 	}
 }
 
@@ -575,6 +574,27 @@ void	free_vs(t_vs **vs)
 	delwin((*vs)->win_help);
 	ft_memdel((void *)vs);
 	endwin();
+}
+
+t_vs	*init_vs(void)
+{
+	t_vs *vs;
+
+	if (!(vs = (t_vs *)ft_memalloc(sizeof(t_vs))))
+		exit(0);
+	vs->is_running = false;
+	vs->speed = DEFAULT_SPEED;
+	vs->win_arena = NULL;
+	vs->win_info = NULL;
+	vs->win_help = NULL;
+	vs->cursor_pos = 0;
+	vs->button = 0;
+	vs->time = 0;
+	vs->aff_symbol = 0;
+	vs->aff_player = NULL;
+	vs->sounds = false;
+	vs->display_help = false;
+	return (vs);
 }
 
 int visual(t_cor *cor)

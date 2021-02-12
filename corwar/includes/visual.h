@@ -14,7 +14,9 @@
 # define MIN_PLAYER_ID			1
 # define MAX_PLAYER_ID 4
 # define DEFAULT_INDENT			5
+
 # define INDEX(X)		((X) - 1)
+
 # define INDEX_CURSOR(X)		((X) + 5)
 # define INDEX_PLAYER(X)		((X) - 5)
 # define COLOR_GRAY				8
@@ -88,5 +90,9 @@ typedef struct		s_vs
 	int				sounds;
 	int 			display_help;
 }					t_vs;
+
+t_vs	*init_vs(void);
+void	clear_cursor(t_cor *vm, t_process *cursor);
+void	draw_cursor(t_cor *vm, t_process *cursor);
 
 #endif //CORWAR_VISUAL_H

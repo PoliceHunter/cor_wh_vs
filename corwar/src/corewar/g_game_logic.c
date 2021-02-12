@@ -12,6 +12,7 @@
 
 #include "../../includes/corwar.h"
 #include "../../includes/g_corewar_op.h"
+#include "../../includes/visual.h"
 
 void			parse_codetype(t_cor *cor, t_process *process)
 {
@@ -52,6 +53,8 @@ void			kill_caretka(t_cor *cor)
 		process = get_from_vec(&cor->process, index);
 		if (process->live_last_cycle == -1 || cor->cycles_to_die <= 0)
 		{
+			if (cor->flag.visual == 4)
+				clear_cursor(cor, process);
 			print_log(cor, process, 2);
 			remove_from_vec(&cor->process, index);
 			cor->count_cursors--;
@@ -60,6 +63,20 @@ void			kill_caretka(t_cor *cor)
 		else
 			process->live_last_cycle = -1;
 	}
+}
+
+static void		reset_lives_nums(t_cor *vm)
+{
+	int32_t		i;
+
+	i = 0;
+	while (i < vm->count_players - 1)
+	{
+		vm->player[i].previous_lives_num = vm->player[i].current_lives_num;
+		vm->player[i].current_lives_num = 0;
+		i++;
+	}
+	vm->count_lives = 0;
 }
 
 void			make_check(t_cor *cor)
@@ -71,6 +88,7 @@ void			make_check(t_cor *cor)
 		cor->cycles_to_die -= CYCLE_DELTA;
 		cor->count_check = 0;
 	}
+	reset_lives_nums(cor);
 	cor->cycles_after_check = 0;
 	cor->count_lives = 0;
 }
@@ -84,7 +102,6 @@ int				process_game_logic(t_cor *cor)
 		cor->cycle++;
 		game_in_cycle(cor);
 		cor->cycles_after_check++;
-		print_log(cor, NULL, 4);
 		if (cor->cycles_to_die == cor->cycles_after_check
 		|| cor->cycles_to_die <= 0)
 			make_check(cor);

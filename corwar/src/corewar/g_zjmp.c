@@ -12,6 +12,7 @@
 
 #include "../../includes/corwar.h"
 #include "../../includes/g_corewar_op.h"
+#include "../../includes/visual.h"
 
 void				zjmp(t_cor *cor, t_process *proc)
 {
@@ -21,5 +22,11 @@ void				zjmp(t_cor *cor, t_process *proc)
 	arg1 = byte_to_int32(cor, proc, 0, cor->buffer_sizes[0]);
 	jump = arg1 % IDX_MOD;
 	if (proc->carry == 1)
+	{
+		if (cor->vs)
+			clear_cursor(cor, proc);
 		proc->op_step = jump;
+		if (cor->vs)
+			draw_cursor(cor, proc);
+	}
 }

@@ -64,6 +64,8 @@ struct					s_player
 	int					index_player_ac;
 	int					code_size;
 	uint32_t			position_on_map;
+	size_t				current_lives_num;
+	size_t				previous_lives_num;
 };
 
 typedef struct			s_op
@@ -268,5 +270,9 @@ void					st(t_cor *vm, t_process *proc);
 void					sub(t_cor *vm, t_process *proc);
 void					xor(t_cor *vm, t_process *proc);
 void					zjmp(t_cor *vm, t_process *proc);
+
+
+int32_t		calc_addr(int32_t addr);
+void		update_map(t_cor *vm, t_process *cursor, int32_t addr, int32_t size);
 
 #endif

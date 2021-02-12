@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/corwar.h"
+#include "../../includes/visual.h"
 
 void	start_game(t_cor *cor)
 {
@@ -61,6 +62,9 @@ int		main(int ac, char **av)
 	init_arena(&cor);
 	init_processes(&cor);
 	print_intro(&cor);
-	start_game(&cor);
+	if (cor.flag.visual == 4)
+		visual(&cor);
+	else
+		start_game(&cor);
 	return (0);
 }

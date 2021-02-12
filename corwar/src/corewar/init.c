@@ -21,6 +21,8 @@ void		init_players(t_cor *cor)
 	cor->player[cor->count_players].index_player_ac = 0;
 	cor->player[cor->count_players].id = 0;
 	cor->player[cor->count_players].code_size = 0;
+	cor->player[cor->count_players].current_lives_num = 0;
+	cor->player[cor->count_players].previous_lives_num = 0;
 }
 
 void		init_cor(t_cor *cor, char **av)

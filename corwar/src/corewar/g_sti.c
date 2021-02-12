@@ -25,4 +25,7 @@ void				sti(t_cor *cor, t_process *proc)
 	value3 = get_value(cor, proc, 2);
 	address = get_address(proc, (value2 + value3) % IDX_MOD, 0);
 	value32_to_map(cor, regvalue, address, DIR_SIZE);
+	if (cor->vs)
+	update_map(cor, proc, proc->pos + ((address) % IDX_MOD),
+			   DIR_SIZE);
 }

@@ -12,6 +12,29 @@
 
 #include "../../includes/corwar.h"
 #include "../../includes/g_corewar_op.h"
+#include "../../includes/visual.h"
+
+int32_t		calc_addr(int32_t addr)
+{
+	addr %= MEM_SIZE;
+	if (addr < 0)
+		addr += MEM_SIZE;
+	return (addr);
+}
+
+void		update_map(t_cor *vm, t_process *cursor, int32_t addr, int32_t size)
+{
+	int32_t value;
+
+	value = ((cursor->player_id - 1) % MAX_PLAYER_ID) + 1;
+	while (size)
+	{
+		vm->vs->map[calc_addr(addr + size - 1)].index = value;
+		vm->vs->map[calc_addr(addr
+							  + size - 1)].wait_cycles_store = CYCLE_TO_WAIT;
+		size--;
+	}
+}
 
 void				st(t_cor *cor, t_process *proc)
 {
@@ -33,5 +56,7 @@ void				st(t_cor *cor, t_process *proc)
 		arg2 = byte_to_int32(cor, proc, 1, cor->buffer_sizes[1]);
 		address = get_address(proc, arg2 % IDX_MOD, 0);
 		value32_to_map(cor, regvalue, address, DIR_SIZE);
+		if (cor->vs)
+			update_map(cor, proc, proc->pos + (address % IDX_MOD), DIR_SIZE);
 	}
 }

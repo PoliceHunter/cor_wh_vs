@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/corwar.h"
+#include "../../includes/visual.h"
 
 void	flag_visual(t_cor *cor, char *num, int ac, int *i)
 {
@@ -25,6 +26,8 @@ void	flag_visual(t_cor *cor, char *num, int ac, int *i)
 	if (tmp > INT_MAX || tmp <= 0)
 		exterminate(cor, INVALID_VISUAL);
 	cor->flag.visual = tmp;
+	if (cor->flag.visual == 4)
+		cor->vs = init_vs();
 }
 
 void	flag_aff(t_cor *cor, int ac, int *i)

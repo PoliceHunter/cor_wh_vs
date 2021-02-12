@@ -12,6 +12,7 @@
 
 #include "../../includes/corwar.h"
 #include "../../includes/g_corewar_op.h"
+#include "../../includes/visual.h"
 
 int				arg_types(t_cor *cor, t_process *process)
 {
@@ -114,5 +115,9 @@ void			game_in_cycle(t_cor *cor)
 				process->real_op_code = process->op_code - 1;
 			index = time_to_do(cor, process, index);
 		}
+		if (cor->vs)
+			clear_cursor(cor, process);
+		if (cor->vs)
+			draw_cursor(cor, process);
 	}
 }

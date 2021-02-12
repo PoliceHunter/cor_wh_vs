@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/corwar.h"
+#include "../../includes/visual.h"
 
 void				aff(t_cor *cor, t_process *proc)
 {
@@ -21,4 +22,9 @@ void				aff(t_cor *cor, t_process *proc)
 	value = proc->reg[regnum1 - 1];
 	if (cor->flag.aff)
 		ft_printf("Aff: %c\n", (char)value);
+	if (cor->flag.visual == 4)
+	{
+		cor->vs->aff_symbol = (char)value;
+		cor->vs->aff_player = proc->player_id;
+	}
 }
